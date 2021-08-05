@@ -58,7 +58,6 @@ class MyDataLoader:
         time_elapsed = time.time() - start
         print("done")
         print("{}s used".format(int(time_elapsed)))
-        
 
         state = np.random.get_state()
         np.random.shuffle(self.imgList)
