@@ -5,6 +5,7 @@ from PIL import Image
 import time
 import torch
 from numpy.lib.shape_base import split
+from tqdm import tqdm
 
 class MyDataLoader: 
     # 加载LFW所有的数据集
@@ -26,6 +27,7 @@ class MyDataLoader:
     testImgs = []
     testLabels = []
     testLabelsOnehot = []
+    testNames = []
 
 
     def __init__(self):
@@ -43,8 +45,8 @@ class MyDataLoader:
         del self.nameList[-1] 
         del self.labelList[-1] 
         self.dataCount = len(self.labelList)
-        self.trainIndex = int(self.dataCount*0.65)
-        self.validationIndex = int(self.dataCount*0.85)
+        self.trainIndex = int(self.dataCount*0.4)
+        self.validationIndex = int(self.dataCount*0.5)
         self.onehotLabel = np.eye(2)[self.labelList]
         # 读入图像数据
         
@@ -52,7 +54,7 @@ class MyDataLoader:
         length = len(self.nameList)
         start = time.time()
         print("begin loading pictures...")
-        for name in self.nameList:
+        for name in tqdm(self.nameList):
             self.imgList.append(self.loadPicArray(".\\"+name))
             count += 1
         time_elapsed = time.time() - start
@@ -65,6 +67,8 @@ class MyDataLoader:
         np.random.shuffle(self.labelList)
         np.random.set_state(state)
         np.random.shuffle(self.onehotLabel)
+        np.random.set_state(state)
+        np.random.shuffle(self.nameList)
 
         self.trainImgs = self.imgList[0:self.trainIndex]
         self.trainLabels = self.labelList[0:self.trainIndex]
@@ -77,6 +81,9 @@ class MyDataLoader:
         self.testImgs = self.imgList[self.validationIndex:]
         self.testLabels = self.labelList[self.validationIndex:]
         self.testLabelsOnehot = self.onehotLabel[self.validationIndex:]
+        self.testNames = self.nameList[self.validationIndex:]
+
+        print("train images:{}, validate images:{}, test images:{}".format(len(self.trainImgs),len(self.validationImgs),len(self.testImgs)))
         
     def loadPicArray(self, picFilePath):
         picData = cv2.imread(picFilePath,flags=cv2.IMREAD_GRAYSCALE)
@@ -92,6 +99,9 @@ class MyDataLoader:
 
     def getTestData(self):
         return torch.tensor(self.testImgs), torch.tensor(self.testLabels), torch.tensor(self.testLabelsOnehot)
+    
+    def getTestNames(self):
+        return self.testNames
 
     def printlist(self):
         print(self.testLabelsOnehot)
