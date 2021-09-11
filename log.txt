@@ -1,0 +1,6 @@
+lr=0.001,batch=20,epoch=2,lr_loss=0.9
+lr=0.001,batch=20,epoch=2,lr_loss=0.9
+lr=0.001,batch=20,epoch=2,lr_loss=0.9
+lr=0.001,batch=20,epoch=2,lr_loss=0.9
+lr=0.001,batch=20,epoch=2,lr_loss=0.9
+lr=0.001,batch=20,epoch=2,lr_loss=0.9

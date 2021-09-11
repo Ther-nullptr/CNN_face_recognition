@@ -1,6 +1,4 @@
-__pycache__/
-d2lzh_pytorch/
-lfw_funneled/
-.idea/
-*.txt
-softmax.py
+*
+!*.py
+!*.cmd
+!*.txt
