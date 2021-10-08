@@ -15,7 +15,6 @@ import os
 from CNN import CNN
 currentpath = os.path.abspath('.')
 
-
 class App:
     def __init__(self): # gui组件
         # 后台运行

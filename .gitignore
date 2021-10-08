@@ -2,3 +2,5 @@
 !*.py
 !*.cmd
 !*.txt
+!*.pdf
+!.gitignore

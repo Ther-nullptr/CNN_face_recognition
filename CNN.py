@@ -27,7 +27,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 lr = 0.001
 batchSize = 20
 epoch = 30
-lossRate = 0.99
+lossRate = 0.5
 
 # 命令行参数模式
 if len(sys.argv)>1:
@@ -235,13 +235,14 @@ def test(cnn,testLoader):
         for i in range(len(testLoader[0])):
             X = testLoader[0][i].unsqueeze(0)
             Y = testLoader[1][i]
+            X,Y = X.to(device),Y.to(device)
             name = testLoader[2][i]
             actualSex = ''
             predictSex = ''
             color = 'green'
             Y_hat = cnn(X)
             test_acc_sum += (Y_hat.argmax(dim=1) == Y).sum().item()
-
+            n += 1
             if (i % 100 == 0):
                 if (Y == 0):
                     actualSex = 'female'
@@ -262,7 +263,6 @@ def test(cnn,testLoader):
                     colored(
                         "actual:{}\tpredicted:{}".format(
                             actualSex, predictSex), color))
-            n += 1
         print("test accuracy %.1f%%" % (100 * test_acc_sum / n))
 
 
@@ -283,7 +283,9 @@ if __name__ == "__main__":
     
     for i in range(1, epoch + 1):
         print("epoch {}:".format(i))
+        cnn.train()
         train(cnn, optimizer, loss, trainLoader)
+        cnn.eval()
         validate(cnn, loss, validationLoader)
         if i%5 == 0:
             lr = lr * lossRate
@@ -307,4 +309,5 @@ if __name__ == "__main__":
     plt.legend()
     plt.savefig('./'+dirname+'/loss.jpg')
     
+    cnn.eval()
     test(cnn,testLoader)
